@@ -1,0 +1,19 @@
+{
+  "name": "shewabet",
+  "version": "1.0.0",
+  "description": "Dashbet Betting Game backend and frontend",
+  "main": "admin_server.js",
+  "scripts": {
+    "start": "node admin_server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
