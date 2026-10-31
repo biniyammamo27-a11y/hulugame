@@ -1,4 +1,57 @@
-const express = require('express');
+=> Cloning from https://github.com/biniyammamo27-a11y/hulugame
+==> Checking out commit cf850e1fee0227417eb5cc82001c0ad2eec20754 in branch main
+==> Requesting Node.js version >=20.0.0
+==> Using Node.js version 26.13.0 via /opt/render/project/src/package.json
+==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+==> Installing Node.js version 26.13.0...
+==> Running build command 'npm install'...
+
+added 90 packages, and audited 91 packages in 3s
+
+20 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+==> Uploading build...
+==> Uploaded in 1.7s. Compression took 0.6s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'node admin_server.js'
+/opt/render/project/src/admin_server.js:213
+aapp.listen
+^
+
+ReferenceError: aapp is not defined
+    at Object.<anonymous> (/opt/render/project/src/admin_server.js:213:1)
+    at Module._compile (node:internal/modules/cjs/loader:1968:14)
+    at Object..js (node:internal/modules/cjs/loader:2108:10)
+    at Module.load (node:internal/modules/cjs/loader:1690:32)
+    at Module._load (node:internal/modules/cjs/loader:1480:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v26.13.0
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+==> Instance srv-dbip6dss728c73fuanug-424d7 restarted
+==> Running 'node admin_server.js'
+/opt/render/project/src/admin_server.js:213
+app.listen
+^
+
+ReferenceError: aapp is not defined
+    at Object.<anonymous> (/opt/render/project/src/admin_server.js:213:1)
+    at Module._compile (node:internal/modules/cjs/loader:1968:14)
+    at Object..js (node:internal/modules/cjs/loader:2108:10)
+    at Module.load (node:internal/modules/cjs/loader:1690:32)
+    at Module._load (node:internal/modules/cjs/loader:1480:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v26.13.0const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const os = require('os');
