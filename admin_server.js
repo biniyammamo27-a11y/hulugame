@@ -56,6 +56,6 @@ app.get('/admin/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
-    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-5.onrender.com`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-6.onrender.com`);
     console.log(`==================================================\n`);
 });
