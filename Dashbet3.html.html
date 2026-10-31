@@ -5,246 +5,719 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashbet - Ultimate Live KENO</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #121212; color: #ffffff; padding-bottom: 70px; }
-        .header { background: #1f1f1f; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ffcc00; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: bold; color: #ffcc00; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-box { background: #2d2d2d; padding: 8px 15px; border-radius: 20px; border: 1px solid #ffcc00; font-weight: bold; color: #ffcc00; }
-        .auth-container { max-width: 400px; margin: 50px auto; padding: 30px; background: #1f1f1f; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid #333; text-align: center; }
-        .auth-tabs { display: flex; margin-bottom: 25px; border-bottom: 1px solid #333; }
-        .auth-tab { flex: 1; padding: 12px; background: none; border: none; color: #aaa; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
-        .auth-tab.active { color: #ffcc00; border-bottom: 3px solid #ffcc00; }
-        .auth-form input { width: 100%; padding: 14px; margin-bottom: 15px; background: #2d2d2d; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 16px; outline: none; transition: border 0.3s; }
-        .auth-form input:focus { border-color: #ffcc00; }
-        .auth-form button { width: 100%; padding: 14px; background: #ffcc00; border: none; border-radius: 8px; color: #000; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .auth-form button:hover { background: #e6b800; }
-        .main-content { max-width: 600px; margin: 20px auto; padding: 15px; display: none; }
-        .welcome-card { background: #1f1f1f; padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 5px solid #ffcc00; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        .welcome-card h3 { color: #ffcc00; margin-bottom: 8px; }
-        .wallet-actions { display: flex; gap: 15px; margin-top: 15px; }
-        .btn-wallet { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; }
-        .btn-deposit { background: #28a745; color: white; }
-        .btn-withdraw { background: #dc3545; color: white; }
-        .section-view { display: none; }
-        .section-view.active { display: block; }
-        .game-menu { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .game-card { background: #1f1f1f; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .game-info h4 { font-size: 18px; margin-bottom: 4px; }
-        .game-status { font-size: 12px; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
-        .status-active { background: rgba(40,167,69,0.2); color: #28a745; border: 1px solid #28a745; }
-        .status-soon { background: rgba(220,53,69,0.2); color: #dc3545; border: 1px solid #dc3545; }
-        .btn-play { padding: 10px 20px; background: #ffcc00; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-play:disabled { background: #444; color: #888; cursor: not-allowed; }
-        .keno-container { background: #1f1f1f; border-radius: 12px; padding: 15px; margin-top: 10px; border: 1px solid #333; }
-        .keno-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; }
-        .timer { font-size: 18px; font-weight: bold; color: #ffcc00; background: rgba(255,204,0,0.1); padding: 5px 12px; border-radius: 6px; }
-        .keno-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-bottom: 20px; }
-        .keno-num { aspect-ratio: 1; background: #2d2d2d; border: 1px solid #444; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
-        .keno-num.selected { background: #ffcc00; color: #000; border-color: #ffcc00; box-shadow: 0 0 10px rgba(255,204,0,0.5); }
-        .keno-num.hit { background: #28a745 !important; color: #fff !important; border-color: #28a745 !important; }
-        .keno-num.draw-anim { background: #007bff; color: #fff; border-color: #007bff; animation: pulse 0.3s ease-in-out; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .bet-bar { display: flex; gap: 10px; align-items: center; background: #2d2d2d; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
-        .bet-ctrl { background: #444; color: #fff; border: none; width: 35px; height: 35px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .bet-input { flex: 1; text-align: center; background: none; border: none; color: #ffcc00; font-size: 18px; font-weight: bold; width: 60px; outline: none; }
-        .btn-bet { padding: 12px 30px; background: #28a745; color: #fff; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .panel-view { background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-top: 15px; }
-        .panel-tabs { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .panel-tab { background: none; border: none; color: #aaa; padding: 6px 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .panel-tab.active { color: #ffcc00; position: relative; }
-        .panel-tab.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background: #ffcc00; }
-        .panel-content { font-size: 14px; max-height: 200px; overflow-y: auto; }
-        .history-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2d2d2d; }
-        .history-ball-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
-        .history-ball { width: 22px; height: 22px; background: #ffcc00; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1f1f1f; display: flex; border-top: 2px solid #222; max-width: 100%; justify-content: space-around; padding: 8px 0; z-index: 1000; }
-        .nav-item { background: none; border: none; color: #aaa; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; cursor: pointer; flex: 1; }
-        .nav-item.active { color: #ffcc00; }
-        .nav-icon { font-size: 20px; }
-        .btn-back { background: none; border: 1px solid #444; color: #ccc; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-bottom: 15px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; color: #ccc; font-size: 14px; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; background: #2d2d2d; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 15px; outline: none; }
-        .btn-submit { width: 100%; padding: 14px; background: #ffcc00; color: #000; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .btn-logout { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .user-info-bar { background: #1f1f1f; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b111e; color: #ffffff; margin: 0; padding: 0; padding-bottom: 80px; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: #0f172a; padding: 20px; min-height: 100vh; box-sizing: border-box; position: relative; }
+        h2, h3 { color: #ffcc00; margin: 10px 0; }
+        input, select { width: 95%; padding: 12px; margin: 10px 0; border: 1px solid #1e293b; border-radius: 8px; background: #1e293b; color: #fff; font-size: 16px; box-sizing: border-box; }
+        button { width: 95%; padding: 12px; background: #ffcc00; color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #e6b800; }
+        .tab-buttons { display: flex; justify-content: space-around; margin-bottom: 20px; background: #1e293b; border-radius: 8px; padding: 5px; }
+        .tab-btn { background: none; color: #bbb; width: 48%; padding: 10px; margin: 0; border-radius: 6px; border: none; cursor: pointer; }
+        .tab-btn.active { background: #ffcc00; color: #000; font-weight: bold; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-weight: bold; font-size: 15px; border: 1px solid #334155; position: relative; }
+        .balance-badge { background: #1c2541; color: #00ff00; padding: 8px 16px; border-radius: 20px; border: 1px solid #00ff00; font-size: 16px; }
+        .profile-icon-btn { width: 36px; height: 32px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .profile-icon-btn:hover { background: #24344d; border-color: #ffcc00; }
+        .user-profile-menu-box { display: none; position: absolute; top: 52px; left: 12px; background: #151f32; border: 1px solid #ffcc00; border-radius: 8px; width: 170px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 10000; text-align: left; overflow: hidden; animation: slideDown 0.2s ease-out; }
+        .user-profile-menu-box.show { display: block; }
+        .menu-phone-header { padding: 10px 12px; font-size: 12px; color: #94a3b8; border-bottom: 1px solid #24344d; background: #0f172a; word-break: break-all; }
+        .menu-logout-trigger-btn { padding: 12px; font-size: 14px; color: #ef4444; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .menu-logout-trigger-btn:hover { background: #dc2626; color: #fff; }
+        .menu-title-text { color: #00ffcc; text-align: left; font-size: 16px; font-weight: bold; margin: 15px 5px; text-transform: uppercase; }
+        .keno-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; background: #0f172a; padding: 12px; border-radius: 8px; margin: 15px 0; border: 1px solid #1e293b; }
+        .keno-num { padding: 10px 0; background: #1e293b; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; color: #fff; }
+        .keno-num.selected { background: #475569; color: #fff; border: 1px solid #ffcc00; }
+        .keno-num.drawn { background: #00ff00 !important; color: #000 !important; box-shadow: 0 0 10px #00ff00; font-weight: bold; }
+        .navigation-bar { display: flex; justify-content: space-around; background: #0f172a; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; padding: 12px 0; border-top: 1px solid #1e293b; z-index: 9999; }
+        .nav-btn { background: none; color: #64748b; border: none; cursor: pointer; font-size: 13px; margin: 0; padding: 5px 10px; font-weight: bold; }
+        .nav-btn.active { color: #ffcc00; }
+        .wallet-card { background: #1e293b; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: left; }
+        .wallet-menu-btn { display: inline-block; width: 45%; padding: 12px; margin: 10px 2%; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; }
+        .sub-tab-buttons { display: flex; justify-content: space-around; border-bottom: 2px solid #1e293b; margin-top: 20px; padding-bottom: 5px; }
+        .sub-tab-btn { background: none; color: #64748b; border: none; font-weight: bold; font-size: 14px; cursor: pointer; padding: 5px 10px; }
+        .sub-tab-btn.active { color: #00ff00; border-bottom: 3px solid #00ff00; }
+        .all-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .all-box-card { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 10px 5px; font-size: 13px; text-align: center; min-height: 120px; box-sizing: border-box; }
+        .ticket-item { background: #0f172a; border: 1px solid #334155; border-radius: 4px; padding: 5px; margin-top: 5px; font-size: 11px; color: #ffffff; text-align: left; word-break: break-all; }
+        .bt-sorted-item { background: #0f172a; border: 1px solid #334155; border-radius: 4px; padding: 5px; margin-top: 5px; font-size: 11px; color: #ffcc00; text-align: left; word-break: break-all; }
+        .hit-num-text { color: #00ff00 !important; font-weight: bold; background: #15803d; padding: 1px 3px; border-radius: 3px; }
+        .result-row-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 8px; }
+        .result-ball { background: #ffcc00; color: #000; font-weight: bold; padding: 6px 0; border-radius: 5px; text-align: center; font-size: 13px; }
+        .stat-list-item { display: flex; justify-content: space-between; background: #1e293b; border: 1px solid #334155; padding: 8px 12px; margin-bottom: 5px; border-radius: 6px; font-size: 13px; font-weight: bold; }
+        .history-round-card { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .history-round-header { color: #ffcc00; font-weight: bold; font-size: 14px; border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 8px; }
+        .result-round-block { background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 12px; margin-bottom: 12px; text-align: left; }
+        .games-premium-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 5px; margin-top: 10px; }
+        .game-premium-card { background: #151f32; border: 1px solid #24344d; border-radius: 16px; padding: 25px 10px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
+        .game-premium-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+        .custom-file-upload-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 120px; background: #0f172a; border: 2px dashed #ffcc00; border-radius: 10px; cursor: pointer; margin: 12px 0; box-sizing: border-box; overflow: hidden; padding: 5px; }
+        .withdraw-available-badge { background: #111827; color: #00ff00; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; margin: 10px 0; border: 1px solid #059669; font-size: 15px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">Dashbet</div>
-        <div class="balance-box" id="global-balance-box" style="display: none;">
-            <span id="balance-display">0.00 ETB</span>
+<div class="container">
+    <div id="auth-section">
+        <p style="color: #bbb;">እባክዎ መጀመሪያ ይግቡ ወይም ይመዝገቡ</p>
+        <div class="tab-buttons">
+            <button id="tab-login-btn" class="tab-btn active" onclick="switchAuthTab('login')">LOGIN</button>
+            <button id="tab-register-btn" class="tab-btn" onclick="switchAuthTab('register')">REGISTER</button>
         </div>
-    </div>
-    <div class="auth-container" id="auth-view">
-        <div class="auth-tabs">
-            <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN (ይግቡ)</button>
-            <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">REGISTER</button>
-        </div>
-        
-        <div class="auth-form" id="login-form">
+        <div id="login-form">
             <input type="text" id="login-phone" placeholder="PHONE NUMBER (የስልክ ቁጥር)">
             <input type="password" id="login-password" placeholder="PASSWORD (የይለፍ ቃል)">
             <button onclick="loginUser()">LOGIN (ይግቡ)</button>
         </div>
-        
-        <div class="auth-form" id="register-form" style="display: none;">
+        <div id="register-form" style="display: none;">
             <input type="text" id="register-phone" placeholder="CREATE PHONE NUMBER">
             <input type="password" id="register-password" placeholder="CREATE PASSWORD">
             <button onclick="registerUser()">REGISTER</button>
         </div>
     </div>
 
-    <div class="main-content" id="main-view">
-        <div class="user-info-bar">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 18px;">👤</span>
-                <span id="user-phone-display" style="font-weight: bold; color: #ffcc00;">-</span>
+    <div id="main-content-section" style="display: none;">
+        <div class="header-info" id="header-info">
+            <div class="profile-icon-btn" onclick="toggleSecretProfileMenu(event)">👤</div>
+            <div id="secretProfileMenuBox" class="user-profile-menu-box">
+                <div class="menu-phone-header">📞 <b><span id="user-phone-display">-</span></b></div>
+                <div class="menu-logout-trigger-btn" onclick="executeUserLogoutAction()">🚪 LOGOUT (ውጣ)</div>
             </div>
-            <button class="btn-logout" onclick="logoutUser()">🚪 LOGOUT (ውጣ)</button>
+            <div class="balance-badge">Balance: <span id="user-balance-display">0.00</span> ETB</div>
         </div>
 
-        <div id="tab-view-home" class="section-view active">
-            <div class="welcome-card">
-                <h3>👋 ወደ Dashbet እንኳን ደህና መጡ!</h3>
-                <p style="color: #aaa; font-size: 14px;">ጨዋታዎችን ለመምረጥ ከታች ያለውን GAME ታብ ይጫኑ።</p>
-                <div class="wallet-actions">
-                    <button class="btn-wallet btn-deposit" onclick="switchTab('wallet'); openWalletSection('deposit');">DEPOSIT</button>
-                    <button class="btn-wallet btn-withdraw" onclick="switchTab('wallet'); openWalletSection('withdraw');">WITHDRAW</button>
-                </div>
+        <div id="home-tab" style="display: block;">
+            <h3>👋 ወደ Dashbet እንኳን ደህና መጡ!</h3>
+            <p style="color: #94a3b8; font-size: 14px;">ጨዋታዎችን ለመምረጥ ከታች ያለውን GAME ታብ ይጫኑ።</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="switchTab('wallet'); showWalletForm('deposit');" style="background: #10b981; color:#fff;">DEPOSIT</button>
+                <button onclick="switchTab('wallet'); showWalletForm('withdraw');" style="background: #ef4444; color:white;">WITHDRAW</button>
             </div>
         </div>
-        <div id="tab-view-wallet" class="section-view">
-            <div class="welcome-card" style="border-left-color: #007bff;">
-                <h3 style="color: #007bff;">💰 WALLET & PAYMENTS</h3>
-                <div class="wallet-actions">
-                    <button class="btn-wallet btn-deposit" onclick="openWalletSection('deposit')">📷 DEPOSIT</button>
-                    <button class="btn-wallet btn-withdraw" onclick="openWalletSection('withdraw')">💸 WITHDRAW</button>
-                </div>
+        <div id="wallet-tab" style="display: none;">
+            <h3>💰 WALLET & PAYMENTS</h3>
+            <div id="wallet-main-buttons">
+                <button class="wallet-menu-btn" style="background: #10b981; color: #fff;" onclick="showWalletForm('deposit')">📷 DEPOSIT</button>
+                <button class="wallet-menu-btn" style="background: #ef4444; color: #fff;" onclick="showWalletForm('withdraw')">💸 WITHDRAW</button>
             </div>
-
-            <div id="wallet-section-deposit" style="display: none; background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333;">
-                <button class="btn-back" onclick="closeWalletSection()">⬅ ይመለሱ</button>
-                <h4 style="color: #28a745; margin-bottom: 15px;">📷 DEPOSIT (ብር ማስገቢያ)</h4>
-                <p style="font-size: 14px; margin-bottom: 15px; color: #ccc; background: #2d2d2d; padding: 10px; border-radius: 6px;">
-                    📋 ኮፒ ያድርጉ ቁጥሩን፦ <strong style="color: #fff; font-size: 16px;">0954127641</strong>
-                </p>
-                <div class="form-group">
-                    <label>የመክፈያ ዘዴ ይምረጡ</label>
-                    <select id="deposit-method">
-                        <option value="telebirr">telebirr</option>
-                        <option value="CBE birr">CBE birr</option>
-                    </select>
+            
+            <div id="deposit-form-block" class="wallet-card" style="display: none;">
+                <button onclick="backToWalletMenu()">⬅ ይመለሱ</button>
+                <h4>📷 DEPOSIT (ብር ማስገቢያ)</h4>
+                <p>📋 ኮፒ ያድርጉ ቁጥሩን፦ <b style="color: #ffcc00;">0954127641</b></p>
+                <div class="custom-file-upload-box" id="custom-upload-container-box" onclick="triggerFileInputClick()">
+                    <div style="font-size: 26px;">📷 / 📁</div>
+                    <div id="upload-status-text" style="font-size: 13px; color: #ffcc00; font-weight: bold; margin-top: 2px;">Upload Screenshot (ፎቶ ይጫኑ)</div>
                 </div>
-                <div class="form-group">
-                    <label>የሚያስገቡት መጠን (ETB)</label>
-                    <input type="number" id="deposit-amount" placeholder="ምሳሌ፦ 500">
-                </div>
-                <div class="form-group">
-                    <label>የላኩበት ስልክ ቁጥር</label>
-                    <input type="text" id="deposit-sender" placeholder="የእርስዎ ስልክ ቁጥር">
-                </div>
-                <div class="form-group">
-                    <label>የግብይት ማረጋገጫ ፎቶ (Screenshot)</label>
-                    <input type="file" id="deposit-screenshot" accept="image/*">
-                </div>
-                <button class="btn-submit" onclick="submitDepositRequest()">REQUEST DEPOSIT</button>
+                <input type="file" id="deposit-screenshot-file" accept="image/*" style="display: none;" onchange="displaySelectedScreenshot(this)">
+                <label style="font-size: 14px; color: #ccc; display: block; text-align: left; margin-left: 5px;">Payment Method:</label>
+                <select id="deposit-method"><option value="telebirr">telebirr</option><option value="cbebirr">CBE birr</option></select>
+                <input type="number" id="deposit-amount" placeholder="Deposit Amount">
+                <input type="text" id="deposit-phone" placeholder="Your Phone Number">
+                <button style="background: #10b981; color: #fff; margin-top: 15px;" onclick="submitDeposit()">REQUEST DEPOSIT</button>
             </div>
-
-            <div id="wallet-section-withdraw" style="display: none; background: #1f1f1f; padding: 15px; border-radius: 12px; border: 1px solid #333;">
-                <button class="btn-back" onclick="closeWalletSection()">⬅ ይመለሱ</button>
-                <h4 style="color: #dc3545; margin-bottom: 15px;">💸 WITHDRAWAL (ብር ማውጫ)</h4>
-                <p style="font-size: 14px; margin-bottom: 15px; color: #ffcc00; font-weight: bold;">
-                    💸 Available Balance: <span id="withdraw-available-balance">0.00 ETB</span>
-                </p>
-                <div class="form-group">
-                    <label>የመቀበያ ዘዴ ይምረጡ</label>
-                    <select id="withdraw-method">
-                        <option value="telebirr">telebirr</option>
-                        <option value="CBE birr">CBE birr</option>
-                    </select>
+            
+            <div id="withdraw-form-block" class="wallet-card" style="display: none;">
+                <button onclick="backToWalletMenu()">⬅ ይመለሱ</button>
+                <h4>💸 WITHDRAWAL (ብር ማውጫ)</h4>
+                <div class="withdraw-available-badge">
+                    💸 Withdraw Available Balance: <span id="withdraw-available-amount-display">0.00</span> ETB
                 </div>
-                <div class="form-group">
-                    <label>የሚወጣው መጠን (ETB)</label>
-                    <input type="number" id="withdraw-amount" placeholder="ከ 80 ETB ጀምሮ">
-                </div>
-                <div class="form-group">
-                    <label>የአካውንት ስም (ሙሉ ስም)</label>
-                    <input type="text" id="withdraw-name" placeholder="ምሳሌ፦ አበበ በቀለ">
-                </div>
-                <div class="form-group">
-                    <label>የማውጫ ስልክ ወይም ሂሳብ ቁጥር</label>
-                    <input type="text" id="withdraw-account" placeholder="የማውጫ ቁጥር">
-                </div>
-                <button class="btn-submit" style="background: #dc3545; color: #fff;" onclick="submitWithdrawRequest()">Request Withdrawal</button>
+                <input type="number" id="withdraw-amount" placeholder="Withdrawal Amount">
+                <input type="text" id="withdraw-account" placeholder="Your Account Number">
+                <input type="text" id="withdraw-name" placeholder="Full Name">
+                <select id="withdraw-method"><option value="telebirr">telebirr</option><option value="cbebirr">CBE birr</option></select>
+                <button style="background: #ef4444; color: #fff; margin-top: 10px;" onclick="submitWithdraw()">Request Withdrawal</button>
             </div>
         </div>
-        <div id="tab-view-game" class="section-view">
-            <div id="games-list-menu" class="game-menu">
-                <h3 style="color: #ffcc00; margin-bottom: 5px;">የጨዋታዎች ዝርዝር / GAMES MENU</h3>
-                <div class="game-card">
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <span style="font-size: 32px;">🎰</span>
-                        <div class="game-info">
-                            <h4>Fast Keno</h4>
-                            <span class="game-status status-active">ACTIVE</span>
+
+        <div id="game-tab" style="display: none;">
+            <div id="games-visual-list-menu-block" style="display: block; text-align: left;">
+                <div class="menu-title-text">የጨዋታዎች ዝርዝር / GAMES MENU</div>
+                <div class="games-premium-grid">
+                    <div class="game-premium-card" onclick="switchActiveGame('keno')">🎰<br><div class="game-title-text">Fast Keno</div><div class="game-status-active">ACTIVE</div></div>
+                    <div class="game-premium-card" onclick="switchActiveGame('spin')">🎡<br><div class="game-title-text">Lucky Spin</div><div class="game-status-soon">SOON</div></div>
+                    <div class="game-premium-card" onclick="switchActiveGame('aviator')">🚀<br><div class="game-title-text">Aviator</div><div class="game-status-soon">SOON</div></div>
+                    <div class="game-premium-card" onclick="switchActiveGame('chicken')">🐔<br><div class="game-title-text">Chicken Road 2</div><div class="game-status-soon">SOON</div></div>
+                </div>
+            </div>
+            <div id="keno-game-main-block" style="display: none; margin-top: 15px;">
+                <button onclick="switchActiveGame('menu')">⬅ ወደ ጌም ዝርዝር ይመለሱ</button>
+                <div style="background: #1e293b; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; display: flex; justify-content: flex-end;">
+                    <span>🎯 NEXT DRAW IN: <span id="keno-timer" style="color: #ffcc00;">01:00</span></span>
+                </div>
+                <div id="keno-board" class="keno-grid"></div>
+                
+                <!-- 🎯 ማሻሻያ፦ ተጫዋቹ እራሱ የፈለገውን የብር መጠን እንዲጽፍ የተስተካከለ አዲስ መጻፊያ ሳጥን መስመር -->
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 15px 0;">
+                    <button onclick="changeBet(-1)" style="width: 40px; margin: 0;">−</button>
+                    <input type="number" id="bet-amount-input" value="4.00" min="1" step="1" style="width: 100px; text-align: center; padding: 10px; margin: 0; font-weight: bold; font-size: 18px; color: #ffcc00; background: #1e293b; border: 1px solid #334155; border-radius: 8px;">
+                    <span style="font-weight: bold; font-size: 16px; color: #fff; margin-left: -5px; padding-right: 5px;">ETB</span>
+                    <button onclick="changeBet(1)" style="width: 40px; margin: 0;">+</button>
+                    <button onclick="multiplyBet(2)" style="width: 50px; margin: 0; background: #38bdf8; color: #000;">X2</button>
+                </div>
+                
+                <button id="bet-submit-btn" onclick="placeKenoBet()" style="background: #00ff00; color: #000; margin-top: 15px;">BET</button>
+
+                <div class="sub-tab-buttons">
+                    <button id="sub-all-btn" class="sub-tab-btn active" onclick="switchSubTab('all')">ALL</button>
+                    <button id="sub-history-btn" class="sub-tab-btn" onclick="switchSubTab('history')">HISTORY</button>
+                    <button id="sub-result-btn" class="sub-tab-btn" onclick="switchSubTab('result')">RESULT</button>
+                    <button id="sub-stats-btn" class="sub-tab-btn" onclick="switchSubTab('stats')">STATISTICS</button>
+                </div>
+
+                <div id="content-all" style="display: block; margin-top: 10px;">
+                    <div class="all-grid-container">
+                        <div class="all-box-card" style="overflow-y: auto;">
+                            <div style="color: #ffcc00; font-weight: bold;">📊 BT (Sorted)</div>
+                            <div id="bt-sorted-list-container" style="margin-top: 10px;"></div>
+                        </div>
+                        <div class="all-box-card" style="overflow-y: auto;">
+                            <div style="color: #38bdf8; font-weight: bold;">🎫 My Tickets (<span id="ticket-count-label">0</span>)</div>
+                            <div id="my-tickets-list-container" style="margin-top: 10px;"></div>
+                        </div>
+                        <div class="all-box-card">
+                            <div style="color: #00ff00; font-weight: bold;">✅ My Bets</div>
+                            <div style="background: #00ff00; color:#000; padding: 2px; font-weight:bold; border-radius:4px; font-size:11px; margin: 5px 0;">💰 TOTAL <span id="total-bet-label">0</span> ETB</div>
+                            <div id="my-bets-status-text" style="color: #8492a6; font-size: 11px;">እስካሁን የተጫወቱት ታሪክ የለም።</div>
                         </div>
                     </div>
-                    <button class="btn-play" onclick="openGameScreen('keno')">PLAY</button>
                 </div>
-                <div class="game-card">
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <span style="font-size: 32px;">🎡</span>
-                        <div class="game-info">
-                            <h4>Lucky Spin</h4>
-                            <span class="game-status status-soon">SOON</span>
-                        </div>
-                    </div>
-                    <button class="btn-play" disabled>PLAY</button>
-                </div>
-            </div>
-
-            <div id="game-screen-keno" style="display: none;">
-                <button class="btn-back" onclick="closeGameScreen()">⬅ ወደ ጌም ዝርዝር ይመለሱ</button>
-                <div class="keno-container">
-                    <div class="keno-header">
-                        <span style="font-weight: bold; font-size: 16px; color: #fff;">🎰 FAST KENO LIVE</span>
-                        <span class="timer" id="keno-timer">🎯 NEXT DRAW IN: 01:00</span>
-                    </div>
-                    <div class="bet-bar">
-                        <button class="bet-ctrl" onclick="adjustBet(-5)">−</button>
-                        <input type="text" class="bet-input" id="keno-bet-amount" value="4.00" readonly>
-                        <button class="bet-ctrl" onclick="adjustBet(5)">+</button>
-                        <button class="bet-ctrl" style="width: auto; padding: 0 8px; font-size: 13px;" onclick="multiplyBet(2)">X2</button>
-                        <button class="btn-bet" onclick="placeKenoBet()">BET</button>
-                    </div>
-                    <div class="keno-grid" id="keno-board-grid"></div>
-                </div>
-                <div class="panel-view">
-                    <div class="panel-tabs">
-                        <button class="panel-tab active" id="p-tab-history" onclick="switchPanelTab('history')">ALL HISTORY</button>
-                        <button class="panel-tab" id="p-tab-result" onclick="switchPanelTab('result')">RESULT</button>
-                        <button class="panel-tab" id="p-tab-stats" onclick="switchPanelTab('stats')">STATISTICS</button>
-                    </div>
-                    <div class="panel-content" id="keno-panel-content">እስካሁን የተጫወቱት ታሪክ የለም።</div>
-                </div>
+                
+                <div id="content-history" style="display: none; margin-top: 15px;"><div id="history-rounds-master-container"></div></div>
+                <div id="content-result" style="display: none; margin-top: 15px;"><div id="results-master-history-container"></div></div>
+                <div id="content-stats" style="display: none; margin-top: 15px;"><div id="stats-numbers-list-container"></div></div>
             </div>
         </div>
-    </div>
 
-    <div class="nav-bar" id="global-nav-bar" style="display: none;">
-        <button class="nav-item active" id="nav-home" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span>HOME</span></button>
-        <button class="nav-item" id="nav-wallet" onclick="switchTab('wallet')"><span class="nav-icon">💰</span><span>WALLET</span></button>
-        <button class="nav-item" id="nav-game" onclick="switchTab('game')"><span class="nav-icon">🎰</span><span>GAME</span></button>
+        <div class="navigation-bar">
+            <button id="nav-home" onclick="switchTab('home')" class="nav-btn">🏠<br>HOME</button>
+            <button id="nav-wallet" onclick="switchTab('wallet')" class="nav-btn">💰<br>WALLET</button>
+            <button id="nav-game" onclick="switchTab('game')" class="nav-btn active">🎰<br>GAME</button>
+        </div>
     </div>
-    <script>
-        const SERVER_URL = "https://hulugame-8.onrender.com";
-        let selectedKenoNumbers = [];
-        let currentKenoBetAmount = 4.00;
+</div>
 
-        window.onload = function() { buildKenoBoard(); checkUserSession(); };
-        // ጃቫስክሪፕት አመክንዮ (የቁጥር ምርጫ፣ ምዝገባ፣ መግቢያ እና ዳሽቦርድ አስተዳደር)
-    </script>
+<script>
+// አሮጌውን አጥፍተው ይህንን አዲሱን ሊንክዎን ብቻ ያስገቡ
+const SERVER_URL = "https://hulugame-8.onrender.com";
+let globalScreenshotBase64 = ""; 
+let balanceInterval = null;
+function toggleSecretProfileMenu(event) {
+    event.stopPropagation();
+    document.getElementById("secretProfileMenuBox").classList.toggle("show");
+}
+
+function executeUserLogoutAction() {
+    if(balanceInterval) clearInterval(balanceInterval);
+    balanceInterval = null;
+    globalScreenshotBase64 = "";
+    activeTickets = [];
+    selectedNumbers = [];
+    document.getElementById('login-phone').value = "";
+    document.getElementById('login-password').value = "";
+    document.getElementById('main-content-section').style.display = 'none';
+    document.getElementById('auth-section').style.display = 'block';
+    switchAuthTab('login');
+    document.getElementById("secretProfileMenuBox").classList.remove("show");
+}
+
+window.onclick = function(event) {
+    const box = document.getElementById("secretProfileMenuBox");
+    if(box) box.classList.remove("show");
+}
+
+function triggerFileInputClick() {
+    const fileInput = document.getElementById('deposit-screenshot-file');
+    if (fileInput) fileInput.click();
+}
+
+function displaySelectedScreenshot(input) {
+    const uploadBox = document.getElementById('custom-upload-container-box');
+    if (input && input.files && input.files[0]) { 
+        const file = input.files[0]; 
+        const reader = new FileReader();
+        reader.onload = function(e) { 
+            uploadBox.innerHTML = '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">'; 
+            globalScreenshotBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file); 
+    }
+}
+
+function fetchLiveBalanceFromServer() {
+    const userPhoneDisplayElement = document.getElementById('user-phone-display');
+    if (!userPhoneDisplayElement || document.getElementById('main-content-section').style.display === 'none') return;
+    const userPhone = userPhoneDisplayElement.innerText.trim();
+    fetch(`${SERVER_URL}/admin/users`)
+        .then(res => res.json())
+        .then(users => {
+            const currentUser = users.find(u => u.phone === userPhone);
+            if (currentUser) updateLiveBalanceDisplays(currentUser.balance);
+        }).catch(err => console.log("ባላንስ ማመሳሰል..."));
+}
+
+function loadDrawHistoryFromServer() {
+    fetch(`${SERVER_URL}/api/draw-history`)
+        .then(res => res.json())
+        .then(history => {
+            const ExtresultsMasterContainer = document.getElementById('results-master-history-container');
+            if (!history || history.length === 0) return;
+            
+            if (ExtresultsMasterContainer) {
+                ExtresultsMasterContainer.innerHTML = '';
+                [...history].reverse().forEach(round => {
+                    const resultBlock = document.createElement('div'); resultBlock.className = 'result-round-block';
+                    resultBlock.innerHTML = `<div style="color:#ffcc00; font-weight:bold; margin-bottom:5px; font-size:13px;">🎰 ROUND #${round.roundNumber} RESULTS</div>`;
+                    const row1 = document.createElement('div'); row1.className = 'result-row-grid';
+                    const row2 = document.createElement('div'); row2.className = 'result-row-grid';
+                    round.results.forEach((num, index) => {
+                        const ball = document.createElement('div'); ball.className = 'result-ball'; ball.innerText = num;
+                        if (index < 10) row1.appendChild(ball); else row2.appendChild(ball);
+                    });
+                    resultBlock.appendChild(row1); resultBlock.appendChild(row2); ExtresultsMasterContainer.appendChild(resultBlock);
+                });
+            }
+        }).catch(err => console.log("የዕጣ ታሪክ በመጫን ላይ..."));
+}
+
+function loginUser() {
+    const phoneInput = document.getElementById('login-phone').value; 
+    const passwordInput = document.getElementById('login-password').value;
+    if (!phoneInput || !passwordInput) { alert("⚠️ እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!"); return; }
+   fetch('https://hulugame-8.onrender.com', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ phone: phoneInput, password: passwordInput }) 
+    })
+    .then(res => res.json())
+    .then(data => { 
+        if (data.success) { 
+            document.getElementById('auth-section').style.display = 'none'; 
+            document.getElementById('main-content-section').style.display = 'block'; 
+            document.getElementById('user-phone-display').innerText = data.user.phone; 
+            updateLiveBalanceDisplays(data.user.balance); 
+            switchTab('game'); 
+            loadDrawHistoryFromServer();
+            if(balanceInterval) clearInterval(balanceInterval);
+            balanceInterval = setInterval(fetchLiveBalanceFromServer, 3000);
+        } else { alert(data.message); }
+    }).catch(err => alert("❌ ከሰርቨር ጋር መገናኘት አልተቻለም!"));
+}
+
+function registerUser() {
+    const phoneInput = document.getElementById('register-phone').value; 
+    const passwordInput = document.getElementById('register-password').value;
+    if (!phoneInput || !passwordInput) { alert("⚠️ እባክዎ ምዝገባውን ለመጨረስ ስልክ ቁጥር እና የይለፍ ቃል ይፍጠሩ!"); return; }
+    fetch('https://hulugame-8.onrender.com', {
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ phone: phoneInput, password: passwordInput }) 
+    })
+    .then(res => res.json())
+    .then(data => { 
+        alert(data.message); 
+        if (data.success) { switchAuthTab('login'); }
+    }).catch(err => alert("❌ በምዝገባ ወቅት ከሰርቨር ጋር መገናኘት አልተቻለም!"));
+}
+function submitDeposit() {
+    const amount = document.getElementById('deposit-amount').value.trim(); 
+    const senderPhone = document.getElementById('deposit-phone').value.trim(); 
+    const method = document.getElementById('deposit-method').value; 
+    const userPhone = document.getElementById('user-phone-display').innerText.trim();
+    
+    if(!amount || !senderPhone) { alert("⚠️ እባክዎ ሁሉንም ፎርሞች ይሙሉ!"); return; }
+    if(!globalScreenshotBase64 || globalScreenshotBase64 === "" || globalScreenshotBase64.trim() === "") { 
+        alert("⚠️ እባክዎ መጀመሪያ የክፍያውን ማረጋገጫ ፎቶ ይጫኑ!"); 
+        return; 
+    }
+    
+    const submitBtn = event ? event.target : null;
+    if(submitBtn && submitBtn.tagName === "BUTTON") submitBtn.disabled = true;
+
+    fetch(`${SERVER_URL}/admin/deposits`)
+        .then(res => res.json())
+        .then(list => {
+            const isImageReused = list.some(req => 
+                req.screenshot && req.screenshot.trim() === globalScreenshotBase64.trim()
+            );
+
+            if (isImageReused) {
+                alert("⚠️ የደህንነት ማስጠንቀቂያ፦ ይህንን የክፍያ ማረጋገጫ ፎቶ (Screenshot) ቀደም ሲል ለሌላ የዲፖዚት ጥያቄ ተጠቅመውበታል! ማጭበርበር የተከለከለ ነው፤ እባክዎ ትክክለኛውን ወቅታዊ አዲስ ፎቶ ይጫኑ።");
+                if(submitBtn && submitBtn.tagName === "BUTTON") submitBtn.disabled = false;
+                return; 
+            }
+
+            executeActualDepositSubmissionFetch(userPhone, amount, senderPhone, method, submitBtn);
+        })
+        .catch(() => {
+            alert("❌ የደህንነት ማመሳሰል አልተቻለም! እባክዎ እንደገና ይሞክሩ።");
+            if(submitBtn && submitBtn.tagName === "BUTTON") submitBtn.disabled = false;
+        });
+}
+
+function executeActualDepositSubmissionFetch(userPhone, amount, senderPhone, method, submitBtn) {
+    fetch(`${SERVER_URL}/api/deposit`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ userPhone, amount, senderPhone, method, screenshot: globalScreenshotBase64 }) 
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        globalScreenshotBase64 = ""; 
+        document.getElementById('custom-upload-container-box').innerHTML = '<div style="font-size: 26px;">📷 / 📁</div><div style="font-size: 13px; color: #ffcc00; font-weight: bold; margin-top: 2px;">Upload Screenshot</div>'; 
+        document.getElementById('deposit-amount').value = "";
+        document.getElementById('deposit-phone').value = "";
+        if(submitBtn && submitBtn.tagName === "BUTTON") submitBtn.disabled = false;
+        backToWalletMenu(); 
+    }).catch(err => {
+        alert("❌ ዲፖዚት ጥያቄ መላክ አልተቻለም!");
+        if(submitBtn && submitBtn.tagName === "BUTTON") submitBtn.disabled = false;
+    });
+}
+
+function submitWithdraw() {
+    const amount = document.getElementById('withdraw-amount').value; 
+    const accountNumber = document.getElementById('withdraw-account').value; 
+    const fullName = document.getElementById('withdraw-name').value; 
+    const method = document.getElementById('withdraw-method').value; 
+    const userPhone = document.getElementById('user-phone-display').innerText;
+    if(!amount || !accountNumber || !fullName) { alert("⚠️ እባክዎ ሁሉንም ፎርሞች በትክክል ይሙሉ!"); return; }
+    
+    fetch(`${SERVER_URL}/api/withdraw`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ userPhone, amount, accountNumber, fullName, method }) 
+    })
+    .then(res => res.json())
+    .then(data => { 
+        if(data.success) { 
+            alert(data.message); 
+            fetchLiveBalanceFromServer(); 
+            backToWalletMenu(); 
+        } else { alert(data.message); }
+    }).catch(err => alert("❌ የዊዝድሮው ጥያቄ መላክ አልተቻለም!"));
+}
+function updateLiveBalanceDisplays(newBalance) {
+    const formattedBal = parseFloat(newBalance).toFixed(2);
+    const balanceDisplay = document.getElementById('user-balance-display');
+    if (balanceDisplay) balanceDisplay.innerText = formattedBal;
+    const withdrawDisplay = document.getElementById('withdraw-available-amount-display');
+    if (withdrawDisplay) withdrawDisplay.innerText = formattedBal;
+}
+
+function switchActiveGame(gameName) {
+    document.getElementById('games-visual-list-menu-block').style.display = gameName === 'menu' ? 'block' : 'none';
+    document.getElementById('keno-game-main-block').style.display = gameName === 'keno' ? 'block' : 'none';
+}
+
+function switchAuthTab(type) {
+    document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+    document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
+    document.getElementById('tab-login-btn').classList.toggle('active', type === 'login'); document.getElementById('tab-register-btn').classList.toggle('active', type === 'register');
+}
+
+function switchTab(tabName) {
+    document.getElementById('home-tab').style.display = tabName === 'home' ? 'block' : 'none';
+    document.getElementById('wallet-tab').style.display = tabName === 'wallet' ? 'block' : 'none';
+    document.getElementById('game-tab').style.display = tabName === 'game' ? 'block' : 'none';
+    document.getElementById('nav-home').classList.toggle('active', tabName === 'home'); document.getElementById('nav-wallet').classList.toggle('active', tabName === 'wallet'); document.getElementById('nav-game').classList.toggle('active', tabName === 'game');
+    if (tabName === 'game') switchActiveGame('menu');
+}
+
+function switchSubTab(subName) {
+    document.getElementById('content-all').style.display = subName === 'all' ? 'block' : 'none';
+    document.getElementById('content-history').style.display = subName === 'history' ? 'block' : 'none';
+    document.getElementById('content-result').style.display = subName === 'result' ? 'block' : 'none';
+    document.getElementById('content-stats').style.display = subName === 'stats' ? 'block' : 'none';
+    document.getElementById('sub-all-btn').classList.toggle('active', subName === 'all'); document.getElementById('sub-history-btn').classList.toggle('active', subName === 'history'); document.getElementById('sub-result-btn').classList.toggle('active', subName === 'result'); document.getElementById('sub-stats-btn').classList.toggle('active', subName === 'stats');
+    if(subName === 'stats') { renderStatisticsToUI(); }
+}
+
+function showWalletForm(type) {
+    document.getElementById('wallet-main-buttons').style.display = 'none';
+    document.getElementById('deposit-form-block').style.display = type === 'deposit' ? 'block' : 'none';
+    document.getElementById('withdraw-form-block').style.display = type === 'withdraw' ? 'block' : 'none';
+}
+
+function backToWalletMenu() { document.getElementById('wallet-main-buttons').style.display = 'block'; document.getElementById('deposit-form-block').style.display = 'none'; document.getElementById('withdraw-form-block').style.display = 'none'; }
+let selectedNumbers = []; let currentBet = 4.00; let activeTickets = []; let totalActiveBetAmount = 0; let isDrawingActive = false; let timerInterval = null; let kenoTimeLeft = 60; let currentRoundNumber = 1001;
+
+const KENO_PAYOUT_ODDS = {
+    1: { 1: 3 }, 2: { 2: 5 }, 3: { 2: 2, 3: 50 }, 4: { 2: 1, 3: 5, 4: 80 }, 5: { 3: 3, 4: 15, 5: 200 },
+    6: { 3: 1, 4: 6, 5: 50, 6: 500 }, 7: { 4: 3, 5: 15, 6: 100, 7: 700 }, 8: { 4: 1, 5: 10, 6: 50, 7: 300, 8: 800 },
+    9: { 4: 1, 5: 5, 6: 25, 7: 150, 8: 500, 9: 1000 }, 10: { 4: 1, 5: 3, 6: 15, 7: 50, 8: 300, 9: 500, 10: 1200 }
+};
+
+function startKenoTimer() {
+    kenoTimeLeft = 60; const timerDisplay = document.getElementById('keno-timer');
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        if (isDrawingActive) return; kenoTimeLeft--;
+        if (kenoTimeLeft <= 0) { clearInterval(timerInterval); checkAdminControlBeforeDraw(); return; }
+        if(timerDisplay) timerDisplay.innerText = "00:" + kenoTimeLeft.toString().padStart(2, '0');
+    }, 1000);
+}
+
+function checkAdminControlBeforeDraw() {
+    fetch(`${SERVER_URL}/api/next-numbers`)
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.forcedNumbers && data.forcedNumbers.length === 20) {
+                startAnimatedKenoDraw(data.forcedNumbers);
+            } else {
+                let localFallback = [];
+                while(localFallback.length < 20) {
+                    let r = Math.floor(Math.random() * 80) + 1;
+                    if(!localFallback.includes(r)) localFallback.push(r);
+                }
+                startAnimatedKenoDraw(localFallback.sort((a,b) => a-b));
+            }
+        })
+        .catch(err => {
+            console.log("ከሰርቨር ጋር ግንኙነት ተቋርጧል፦", err);
+            let netFallback = [];
+            while(netFallback.length < 20) {
+                let r = Math.floor(Math.random() * 80) + 1;
+                if(!netFallback.includes(r)) netFallback.push(r);
+            }
+            startAnimatedKenoDraw(netFallback.sort((a,b) => a-b));
+        });
+}
+
+function renderTicketsToUI() {
+    const ticketsContainer = document.getElementById('my-tickets-list-container'); const sortedContainer = document.getElementById('bt-sorted-list-container');
+    if (!ticketsContainer || !sortedContainer) return;
+    ticketsContainer.innerHTML = ''; sortedContainer.innerHTML = '';
+    activeTickets.forEach(ticket => {
+        const ticketDiv = document.createElement('div'); ticketDiv.className = 'ticket-item';
+        let numbersHTML = ticket.numbers.map(num => ticket.hitNumbers.includes(num) ? '<span class="hit-num-text">' + num + '</span>' : num).join(',');
+        let liveWinAmount = 0; let pickedCount = ticket.numbers.length; let hitCount = ticket.hitNumbers.length;
+        if (KENO_PAYOUT_ODDS[pickedCount] && KENO_PAYOUT_ODDS[pickedCount][hitCount]) {
+            let odds = KENO_PAYOUT_ODDS[pickedCount][hitCount]; let rawWin = ticket.bet * odds;
+            liveWinAmount = rawWin > 30000 ? 30000 : rawWin;
+        }
+        let winText = liveWinAmount > 0 ? '<span style="color:#00ff00; font-weight:bold;">[🏆 +' + liveWinAmount.toFixed(2) + ']</span> ' : '';
+        ticketDiv.innerHTML = `<span style="color:#94a3b8;">${ticket.ticketId}</span> | ` + winText + ticket.bet + ' ETB - [' + numbersHTML + ']'; ticketsContainer.appendChild(ticketDiv);
+    });
+    const sortedTickets = [...activeTickets].sort((a, b) => b.bet - a.bet);
+    sortedTickets.forEach(ticket => {
+        const sortedDiv = document.createElement('div'); sortedDiv.className = 'bt-sorted-item';
+        let numbersHTML = ticket.numbers.map(num => ticket.hitNumbers.includes(num) ? '<span class="hit-num-text">' + num + '</span>' : num).join(',');
+        let liveWinAmount = 0; let pickedCount = ticket.numbers.length; let hitCount = ticket.hitNumbers.length;
+        if (KENO_PAYOUT_ODDS[pickedCount] && KENO_PAYOUT_ODDS[pickedCount][hitCount]) {
+            let odds = KENO_PAYOUT_ODDS[pickedCount][hitCount]; let rawWin = ticket.bet * odds;
+            liveWinAmount = rawWin > 30000 ? 30000 : rawWin;
+        }
+        let winText = liveWinAmount > 0 ? '<span style="color:#00ff00; font-weight:bold;">[🏆 +' + liveWinAmount.toFixed(2) + ']</span> ' : '';
+        sortedDiv.innerHTML = `<span style="color:#94a3b8;">${ticket.ticketId}</span> | ` + winText + ticket.bet + ' ETB - [' + numbersHTML + ']'; sortedContainer.appendChild(sortedDiv);
+    });
+}
+function changeBet(val) {
+    const betInput = document.getElementById('bet-amount-input');
+    if (!betInput) return;
+    let currentVal = parseFloat(betInput.value) || 0;
+    currentVal += val;
+    if (currentVal < 1) currentVal = 1; 
+    betInput.value = currentVal.toFixed(2);
+}
+
+function multiplyBet(factor) {
+    const betInput = document.getElementById('bet-amount-input');
+    if (!betInput) return;
+    let currentVal = parseFloat(betInput.value) || 0;
+    currentVal *= factor;
+    betInput.value = currentVal.toFixed(2);
+}
+
+function placeKenoBet() {
+    if (isDrawingActive || selectedNumbers.length === 0) return;
+    
+    const betInput = document.getElementById('bet-amount-input');
+    if (!betInput) return;
+    
+    const typedBetAmount = parseFloat(betInput.value) || 0;
+    if (typedBetAmount <= 0) { 
+        alert("⚠️ እባክዎ በትክክል የውርርድ መጠን ያስገቡ!"); 
+        return; 
+    }
+
+    const balanceElement = document.getElementById('user-balance-display'); 
+    const userPhone = document.getElementById('user-phone-display').innerText.trim();
+    let currentBalance = parseFloat(balanceElement.innerText.trim()) || 0;
+    
+    if (currentBalance < typedBetAmount) { 
+        document.getElementById('my-bets-status-text').innerText = "❌ በቂ ቀሪ ሂሳብ የሎትም!"; 
+        return; 
+    }
+    
+    fetch(`${SERVER_URL}/api/place-bet`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ userPhone, betAmount: typedBetAmount }) 
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            updateLiveBalanceDisplays(data.newBalance);
+            let randomId = 'TK-' + Math.floor(100000 + Math.random() * 900000);
+            const ticket = { 
+                ticketId: randomId, 
+                id: Date.now(), 
+                numbers: [...selectedNumbers], 
+                bet: typedBetAmount, 
+                hitNumbers: [], 
+                winAmount: 0 
+            };
+            activeTickets.push(ticket); 
+            totalActiveBetAmount += typedBetAmount; 
+            renderTicketsToUI();
+            document.getElementById('ticket-count-label').innerText = activeTickets.length; 
+            document.getElementById('total-bet-label').innerText = totalActiveBetAmount.toFixed(2);
+            document.getElementById('my-bets-status-text').innerText = "✅ ቲኬትዎ ተቆርጧል!";
+            selectedNumbers = []; 
+            document.querySelectorAll('.keno-num').forEach(el => el.classList.remove('selected'));
+        }
+    }).catch(() => { alert("❌ ከሰርቨር ጋር መገናኘት አልተቻለም!"); });
+}
+
+function startAnimatedKenoDraw(drawResults) {
+    isDrawingActive = true; 
+    document.getElementById('bet-submit-btn').style.opacity = "0.5";
+    let count = 0; 
+    const elements = document.querySelectorAll('.keno-num');
+    const row1 = document.createElement('div'); row1.className = 'result-row-grid'; 
+    const row2 = document.createElement('div'); row2.className = 'result-row-grid';
+    
+    const drawInterval = setInterval(() => {
+        if (count >= 20) {
+            clearInterval(drawInterval);
+            let totalSessionWin = 0;
+            
+            activeTickets.forEach(ticket => {
+                let pickedCount = ticket.numbers.length;
+                let preciseHits = ticket.numbers.filter(num => drawResults.includes(num));
+                ticket.hitNumbers = preciseHits; 
+                let hitCount = preciseHits.length;
+                ticket.winAmount = 0; 
+                
+                if (KENO_PAYOUT_ODDS[pickedCount] && KENO_PAYOUT_ODDS[pickedCount][hitCount]) {
+                    let odds = KENO_PAYOUT_ODDS[pickedCount][hitCount]; 
+                    let rawWin = ticket.bet * odds;
+                    ticket.winAmount = rawWin > 30000 ? 30000 : rawWin; 
+                    totalSessionWin += ticket.winAmount;
+                }
+            });
+            
+            if (totalSessionWin > 0) {
+                const userPhone = document.getElementById('user-phone-display').innerText.trim();
+                fetch(`${SERVER_URL}/api/claim-win`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userPhone, winAmount: totalSessionWin })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        updateLiveBalanceDisplays(data.newBalance); 
+                    }
+                })
+                .catch(err => console.log("የዕጣ ሂሳብ ማመሳሰል አልተቻለም፦", err));
+            }
+            
+            executePostDrawHistoryAndCleanup(drawResults);
+            return;
+        }
+        
+        let num = drawResults[count]; 
+        if (elements[num - 1]) elements[num - 1].classList.add('drawn');
+        
+        activeTickets.forEach(ticket => {
+            if (ticket.numbers.includes(num) && !ticket.hitNumbers.includes(num)) {
+                ticket.hitNumbers.push(num);
+            }
+        });
+        
+        const ball = document.createElement('div'); ball.className = 'result-ball'; ball.innerText = num;
+        if (count < 10) { row1.appendChild(ball); } else { row2.appendChild(ball); }
+        renderTicketsToUI(); 
+        count++;
+    }, 1000);
+}
+function executePostDrawHistoryAndCleanup(drawResults) {
+    fetch(`${SERVER_URL}/api/save-draw`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ roundNumber: currentRoundNumber, results: drawResults }) 
+    }).then(() => loadDrawHistoryFromServer());
+
+    const historyContainer = document.getElementById('history-rounds-master-container');
+    if (historyContainer && activeTickets.length > 0) {
+        const roundCard = document.createElement('div'); roundCard.className = 'history-round-card';
+        roundCard.innerHTML = `<div class="history-round-header">📜 GAME ROUND #${currentRoundNumber} HISTORY</div>`;
+        
+        activeTickets.forEach(t => {
+            const item = document.createElement('div'); item.style.fontSize = '12px'; item.style.marginBottom = '6px'; item.style.borderBottom = '1px dashed #24344d'; item.style.paddingBottom = '4px';
+            let numbersHTML = t.numbers.map(num => t.hitNumbers.includes(num) ? '<span class="hit-num-text">' + num + '</span>' : num).join(',');
+            let winBadgeText = t.winAmount > 0 ? `<span style="color:#00ff00; font-weight:bold;">[🏆 ያሸነፈው፡ +${t.winAmount.toFixed(2)} ETB]</span>` : `<span style="color:#ef4444;">[❌ ያሸነፈው፡ 0.00 ETB]</span>`;
+            
+            item.innerHTML = `🎫 <b>ID: ${t.ticketId}</b> | Bet: ${t.bet} ETB | ${winBadgeText}<br>🔢 የመረጣቸው ቁጥሮች፦ [${numbersHTML}]`; 
+            roundCard.appendChild(item);
+        });
+        historyContainer.insertBefore(roundCard, historyContainer.firstChild);
+    }
+    
+    currentRoundNumber++;
+    setTimeout(() => {
+        activeTickets = []; totalActiveBetAmount = 0; renderTicketsToUI();
+        document.getElementById('ticket-count-label').innerText = "0"; 
+        document.getElementById('total-bet-label').innerText = "0";
+        document.getElementById('my-bets-status-text').innerText = "እስካሁን የተጫወቱት ታሪክ የለም።";
+        document.querySelectorAll('.keno-num').forEach(el => el.className = 'keno-num'); 
+        isDrawingActive = false; 
+        document.getElementById('bet-submit-btn').style.opacity = "1"; 
+        startKenoTimer();
+    }, 5000); 
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const board = document.getElementById('keno-board');
+    if(board) { 
+        board.innerHTML = '';
+        for (let i = 1; i <= 80; i++) { 
+            const numBtn = document.createElement('div'); numBtn.innerText = i; numBtn.className = 'keno-num';
+            numBtn.onclick = () => selectNumber(numBtn, i); board.appendChild(numBtn); 
+        } 
+    }
+    if (timerInterval) clearInterval(timerInterval);
+    startKenoTimer();
+});
+
+function selectNumber(element, num) {
+    if (isDrawingActive) return; const index = selectedNumbers.indexOf(num);
+    if (index > -1) { selectedNumbers.splice(index, 1); element.classList.remove('selected'); }
+    else { if (selectedNumbers.length >= 10) return; selectedNumbers.push(num); element.classList.add('selected'); }
+}
+
+function renderStatisticsToUI() {
+    const container = document.getElementById('stats-numbers-list-container'); 
+    if(!container) return;
+    container.innerHTML = '<div style="color:#94a3b8; font-size:12px;">📈 ባለፉት 24 ሰዓታት የቁጥሮች ታሪክ በመተንተን ላይ...</div>';
+    fetch(`${SERVER_URL}/api/draw-history`).then(res => res.json()).then(history => {
+        container.innerHTML = ''; let freqData = {}; for(let i=1; i<=80; i++) freqData[i] = 0;
+        const now = new Date(); const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+        let activeDraws = history.filter(round => round.timestamp && new Date(round.timestamp) >= oneDayAgo);
+        if(activeDraws.length === 0) { container.innerHTML = '<div style="color:#94a3b8; font-size:13px; padding:10px;">📊 ባለፉት 24 ሰዓታት የተመዘገበ የዕጣ ታሪክ የለም።</div>'; return; }
+        activeDraws.forEach(round => { round.results.forEach(num => { freqData[num] = (freqData[num] || 0) + 1; }); });
+        let sortedItems = Object.keys(freqData).map(key => { return { number: key, count: freqData[key] }; });
+        sortedItems.sort((a, b) => b.count - a.count);
+        sortedItems.slice(0, 15).forEach((item, index) => {
+            const row = document.createElement('div'); row.className = 'stat-list-item';
+            row.innerHTML = '<span>🔥 ደረጃ ' + (index + 1) + ' ፡ ቁጥር <b style="color:#ffcc00; font-size:15px;">' + item.number + '</b></span> <span>📈 ' + item.count + ' ጊዜ ወጥቷል</span>';
+            container.appendChild(row);
+        });
+    }).catch(() => { container.innerHTML = '❌ ታሪክ መጫን አልተቻለም!'; });
+}
+</script>
 </body>
 </html>
