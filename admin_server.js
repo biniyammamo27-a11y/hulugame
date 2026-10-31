@@ -1,4 +1,3 @@
-=> Cloning from https://github.com/biniyammamo27-a11y/hulugame
 ==> Checking out commit cf850e1fee0227417eb5cc82001c0ad2eec20754 in branch main
 ==> Requesting Node.js version >=20.0.0
 ==> Using Node.js version 26.13.0 via /opt/render/project/src/package.json
