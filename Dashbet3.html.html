@@ -63,17 +63,87 @@
             <button id="tab-login-btn" class="tab-btn active" onclick="switchAuthTab('login')">LOGIN</button>
             <button id="tab-register-btn" class="tab-btn" onclick="switchAuthTab('register')">REGISTER</button>
         </div>
-        <div id="login-form">
-            <input type="text" id="login-phone" placeholder="PHONE NUMBER (የስልክ ቁጥር)">
-            <input type="password" id="login-password" placeholder="PASSWORD (የይለፍ ቃል)">
-            <button onclick="loginUser()">LOGIN (ይግቡ)</button>
-        </div>
-        <div id="register-form" style="display: none;">
-            <input type="text" id="register-phone" placeholder="CREATE PHONE NUMBER">
-            <input type="password" id="register-password" placeholder="CREATE PASSWORD">
-            <button onclick="registerUser()">REGISTER</button>
-        </div>
-    </div>
+        <// 1. ለአዲስ ተጠቃሚ ምዝገባ (Register)
+function registerUser() {
+    const phoneInput = document.getElementById('register-phone');
+    const passwordInput = document.getElementById('register-password');
+
+    if (!phoneInput || !passwordInput) {
+        console.error("የምዝገባ ፎርም ሳጥኖች አልተገኙም!");
+        return;
+    }
+
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!phone || !password) {
+        alert("⚠️ εባክዎ ሁሉንም ፎርም በትክክል ይሙሉ!");
+        return;
+    }
+
+    fetch('https://onrender.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            // ምዝገባው ከተሳካ ፎርሙን ቀይሮ ወደ መግቢያ ይወስዳል
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ ከሰርቨር ጋር መገናኘት አልተቻለም!');
+    });
+}
+
+// 2. ለተጠቃሚ መግቢያ (Login)
+function loginUser() {
+    const phoneInput = document.getElementById('login-phone');
+    const passwordInput = document.getElementById('login-password');
+
+    if (!phoneInput || !passwordInput) {
+        console.error("የመግቢያ ፎርም ሳጥኖች አልተገኙም!");
+        return;
+    }
+
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!phone || !password) {
+        alert("⚠️ εባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!");
+        return;
+    }
+
+    fetch('https://onrender.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("✅ እንኳን ደህና መጡ!");
+            localStorage.setItem('userPhone', data.user.phone);
+            
+            // የባላንስ ማሳያ ኤለመንት መኖሩን አረጋግጦ ቁጥሩን ይተካል
+            const balanceDisplay = document.getElementById('balance-display');
+            if (balanceDisplay && data.user.balance !== undefined) {
+                balanceDisplay.innerText = data.user.balance.toFixed(2) + " ETB";
+            }
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ ከሰርቨር ጋር መገናኘት አልተቻለም!');
+    });
+}
 
     <div id="main-content-section" style="display: none;">
         <div class="header-info" id="header-info">
