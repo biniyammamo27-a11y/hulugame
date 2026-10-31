@@ -279,44 +279,56 @@ function loadDrawHistoryFromServer() {
         }).catch(err => console.log("የዕጣ ታሪክ በመጫን ላይ..."));
 }
 
-function loginUser() {
-    const phoneInput = document.getElementById('login-phone').value; 
-    const passwordInput = document.getElementById('login-password').value;
-    if (!phoneInput || !passwordInput) { alert("⚠️ እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!"); return; }
-    fetch(`${SERVER_URL}/login`, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ phone: phoneInput, password: passwordInput }) 
+// 1. ለአዲስ ተጠቃሚ ምዝገባ (Register)
+function registerUser(username, phoneNumber, password) {
+    fetch('https://hulugame-2.onrender.com', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            phoneNumber: phoneNumber,
+            password: password
+        })
     })
-    .then(res => res.json())
-    .then(data => { 
-        if (data.success) { 
-            document.getElementById('auth-section').style.display = 'none'; 
-            document.getElementById('main-content-section').style.display = 'block'; 
-            document.getElementById('user-phone-display').innerText = data.user.phone; 
-            updateLiveBalanceDisplays(data.user.balance); 
-            switchTab('game'); 
-            loadDrawHistoryFromServer();
-            if(balanceInterval) clearInterval(balanceInterval);
-            balanceInterval = setInterval(fetchLiveBalanceFromServer, 3000);
-        } else { alert(data.message); }
-    }).catch(err => alert("❌ ከሰርቨር ጋር መገናኘት አልተቻለም!"));
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('በተሳካ ሁኔታ ተመዝግበዋል! አሁን መግባት ይችላሉ።');
+        } else {
+            alert('የምዝገባ ስህተት፦ ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ በምዝገባ ወቅት ከሰርቨር ጋር መገናኘት አልተቻለም! እባክዎ ድጋሚ ይሞክሩ።');
+    });
 }
-
-function registerUser() {
-    const phoneInput = document.getElementById('register-phone').value; 
-    const passwordInput = document.getElementById('register-password').value;
-    if (!phoneInput || !passwordInput) { alert("⚠️ እባክዎ ምዝገባውን ለመጨረስ ስልክ ቁጥር እና የይለፍ ቃል ይፍጠሩ!"); return; }
-    fetch(`${SERVER_URL}/register`, { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ phone: phoneInput, password: passwordInput }) 
+function loginUser(phoneNumber, password) {
+    fetch('https://hulugame-2.onrender.com', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            phoneNumber: phoneNumber,
+            password: password
+        })
     })
-    .then(res => res.json())
-    .then(data => { 
-        alert(data.message); 
-        if (data.success) { switchAuthTab('login'); }
-    }).catch(err => alert("❌ በምዝገባ ወቅት ከሰርቨር ጋር መገናኘት አልተቻለም!"));
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('እንኳን ደህና መጡ!');
+            document.getElementById('balance-display').innerText = data.balance + " ETB";
+        } else {
+            alert('የመግቢያ ስህተት፦ ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ ከሰርቨር ጋር መገናኘት አልተቻለም!');
+    });
 }
 function submitDeposit() {
     const amount = document.getElementById('deposit-amount').value.trim(); 
