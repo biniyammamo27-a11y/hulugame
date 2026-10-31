@@ -210,10 +210,4 @@ app.get('/admin/deposits', (req, res) => { const db = readDB(); res.json(db.depo
 app.get('/admin/withdrawals', (req, res) => { const db = readDB(); res.json(db.withdrawals || []); });
 app.get('/admin/users', (req, res) => { const db = readDB(); res.json(Object.values(db.users)); });
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n==================================================`);
-    console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
-    console.log(`💻 ኮምፒውተርዎ ላይ ለመክፈት፡ http://localhost:5000`);
-    console.log(`📱 በስልክዎ ለመክፈት፡ http://${CURRENT_IP}:5000`);
-    console.log(`==================================================\n`);
-});
+aapp.listen
