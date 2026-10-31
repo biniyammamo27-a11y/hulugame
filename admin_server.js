@@ -196,6 +196,6 @@ app.get('/admin/users', (req, res) => { const db = readDB(); res.json(Object.val
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ በፖርት ${PORT} ላይ ተነስቷል!`);
-    console.log(`🔗 ላይቭ ሊንክዎ፦ https://onrender.com`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-8.onrender.com`);
     console.log(`==================================================\n`);
 });
