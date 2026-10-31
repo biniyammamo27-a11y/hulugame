@@ -244,17 +244,26 @@ function displaySelectedScreenshot(input) {
         reader.readAsDataURL(file); 
     }
 }
-
 function fetchLiveBalanceFromServer() {
-    const userPhoneDisplayElement = document.getElementById('user-phone-display');
-    if (!userPhoneDisplayElement || document.getElementById('main-content-section').style.display === 'none') return;
-    const userPhone = userPhoneDisplayElement.innerText.trim();
-    fetch(`${SERVER_URL}/admin/users`)
-        .then(res => res.json())
-        .then(users => {
-            const currentUser = users.find(u => u.phone === userPhone);
-            if (currentUser) updateLiveBalanceDisplays(currentUser.balance);
-        }).catch(err => console.log("ባላንስ ማመሳሰል..."));
+    // ዩአርኤሉ በትክክል ወደ ላይቭ Render ሰርቨርዎ መዞሩን ያረጋግጡ
+    fetch('https://onrender.com')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // ከሰርቨሩ የመጣውን የካፒታል/ባላንስ መረጃ በስክሪኑ ላይ ያሳያል
+        if (data && data.totalCapital !== undefined) {
+            document.getElementById('balance-display').innerText = data.totalCapital.toFixed(2) + " ETB";
+        }
+    })
+    .catch(error => {
+        console.error('የባላንስ ማመሳሰል ስህተት፦', error);
+        // ስህተት ሲኖር በስክሪኑ ላይ የሚመጣው ቀይ መልዕክት
+        alert('❌ ከሰርቨር ጋር መገናኘት አልተቻለም!');
+    });
 }
 
 function loadDrawHistoryFromServer() {
