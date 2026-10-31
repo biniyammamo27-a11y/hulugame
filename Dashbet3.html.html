@@ -81,7 +81,7 @@ function registerUser() {
         return;
     }
 
-    fetch('https://onrender.com', {
+    fetch('https://hulugame-8.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phone, password: password })
@@ -101,7 +101,7 @@ function registerUser() {
     });
 }
 
-// 2. ለተጠቃሚ መግቢያ (Login)
+// 2. ለተጠቃሚ መግቢያ (Login) - የተስተካከለ
 function loginUser() {
     const phoneInput = document.getElementById('login-phone');
     const passwordInput = document.getElementById('login-password');
@@ -115,11 +115,12 @@ function loginUser() {
     const password = passwordInput.value;
 
     if (!phone || !password) {
-        alert("⚠️ εባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!");
+        alert("⚠️ እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!");
         return;
     }
 
-    fetch('https://onrender.com', {
+    // 🚀 ሊንኩ ወደ እርስዎ እውነተኛ የሰርቨር አድራሻ ተስተካክሏል
+    fetch('https://hulugame-8.onrender.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: phone, password: password })
@@ -130,7 +131,6 @@ function loginUser() {
             alert("✅ እንኳን ደህና መጡ!");
             localStorage.setItem('userPhone', data.user.phone);
             
-            // የባላንስ ማሳያ ኤለመንት መኖሩን አረጋግጦ ቁጥሩን ይተካል
             const balanceDisplay = document.getElementById('balance-display');
             if (balanceDisplay && data.user.balance !== undefined) {
                 balanceDisplay.innerText = data.user.balance.toFixed(2) + " ETB";
@@ -144,7 +144,6 @@ function loginUser() {
         alert('❌ ከሰርቨር ጋር መገናኘት አልተቻለም!');
     });
 }
-
     <div id="main-content-section" style="display: none;">
         <div class="header-info" id="header-info">
             <div class="profile-icon-btn" onclick="toggleSecretProfileMenu(event)">👤</div>
