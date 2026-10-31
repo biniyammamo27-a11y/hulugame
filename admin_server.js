@@ -56,6 +56,41 @@ app.get('/admin/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-4.onrender.com`);
+    console.log(`==================================================\n`);
+});
+
+// የአድሚን ዳሽቦርድ መረጃዎች ማግኛ (Admin Routes)
+app.get('/admin/stats', (req, res) => {
+    const db = readDB();
+    let totalCapital = Object.values(db.users).reduce((sum, u) => sum + u.balance, 0);
+    res.json({ 
+        totalUsers: Object.keys(db.users).length, 
+        pendingDeposits: db.deposits.filter(r => r.status === 'PENDING').length, 
+        pendingWithdrawals: db.withdrawals.filter(r => r.status === 'PENDING').length, 
+        totalCapital 
+    });
+});
+
+app.get('/admin/deposits', (req, res) => { 
+    const db = readDB(); 
+    res.json(db.deposits || []); 
+});
+
+app.get('/admin/withdrawals', (req, res) => { 
+    const db = readDB(); 
+    res.json(db.withdrawals || []); 
+});
+
+app.get('/admin/users', (req, res) => { 
+    const db = readDB(); 
+    res.json(Object.values(db.users)); 
+});
+
+// ሰርቨር መቀስቀሻ (Port Binding)
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n==================================================`);
+    console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
     console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-2.onrender.com`);
     console.log(`==================================================\n`);
 });
