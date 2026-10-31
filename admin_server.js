@@ -56,7 +56,7 @@ app.get('/admin/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
-    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-4.onrender.com`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-5.onrender.com`);
     console.log(`==================================================\n`);
 });
 
@@ -91,7 +91,7 @@ app.get('/admin/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ ተነስቷል!`);
-    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-2.onrender.com`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-5.onrender.com`);
     console.log(`==================================================\n`);
 });
 
@@ -298,6 +298,6 @@ app.get('/admin/users', (req, res) => { const db = readDB(); res.json(Object.val
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
     console.log(`🚀 Dashbet ሰርቨር በተሳካ ሁኔታ በፖርት ${PORT} ላይ ተነስቷል!`);
-    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-2.onrender.com/`);
+    console.log(`🔗 ላይቭ ሊንክዎ፦ https://hulugame-5.onrender.com/`);
     console.log(`==================================================\n`);
 });
