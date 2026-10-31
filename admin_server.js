@@ -1,6 +1,12 @@
 const express = require('express');
 const path = require('path');
+
+// ይህ ኮድ ሰርቨሩ ኤችቲኤምኤል ፋይሎችን በቀጥታ ለተጠቃሚው እንዲያሳይ ያደርጋል
+app.use(express.static(path.join(__dirname)));
+
 const cors = require('cors');
+app.use(cors()); // ይህ ከየትኛውም ቦታ የሚመጣን ጥያቄ እንዲቀበል ይፈቅዳል
+
 const os = require('os');
 const fs = require('fs');
 const app = express();
