@@ -199,7 +199,7 @@
 
 <script>
 // አሮጌውን አጥፍተው ይህንን አዲሱን ሊንክዎን ብቻ ያስገቡ
-const SERVER_URL = "https://hulugame-8.onrender.com";
+const SERVER_URL = "https://hulugame-9.onrender.com";
 let globalScreenshotBase64 = ""; 
 let balanceInterval = null;
 function toggleSecretProfileMenu(event) {
@@ -284,7 +284,7 @@ function loginUser() {
     const phoneInput = document.getElementById('login-phone').value; 
     const passwordInput = document.getElementById('login-password').value;
     if (!phoneInput || !passwordInput) { alert("⚠️ እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!"); return; }
-   fetch('https://hulugame-8.onrender.com', { 
+   fetch('https://hulugame-9.onrender.com', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ phone: phoneInput, password: passwordInput }) 
